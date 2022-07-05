@@ -1,5 +1,5 @@
 <div align = "center">
-    <h1>Customized Virtual File System</h1>
+    <h1>CUSTOMIZED VIRTUAL FILE SYSTEM</h1>
 </div>
 
 ### PLATFORM REQUIRED : 
