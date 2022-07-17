@@ -1,29 +1,31 @@
-//********************************************************************
-//																	
-//	Customized Virtual File System Application						
-//
-//********************************************************************
+/*
+#################################################
+##																	
+##	Customized Virtual File System Application						
+##
+#################################################
+*/
 
-
-//////////////////////
-//
-//Header Files
-//
-/////////////////////
-
+/*
+######################
+##
+## Header Files
+##
+######################
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <io.h>
 
-
-////////////////////////
-//
-// Defining The Macros
-//
-////////////////////////
-
+/*
+########################
+##
+## Defining The Macros
+##
+########################
+*/
 
 #define MAXINODE 50 // Maximum Files To Be Created 50
 
@@ -39,13 +41,13 @@
 #define CURRENT 1
 #define END 2           // Hole In The File ie potential gap
 
-
-/////////////////////////////////////
-//
-// Creating SuperBlock Structure
-//
-/////////////////////////////////////
-
+/*
+#####################################
+##
+## Creating SuperBlock Structure
+##
+#####################################
+*/
 
 typedef struct superblock
 {
@@ -54,13 +56,13 @@ typedef struct superblock
 
 } SUPERBLOCK, *PSUPERBLOCK;   
 
-
-/////////////////////////////////////
-//
-// Creating Inode Structure
-//
-/////////////////////////////////////
-
+/*
+#####################################
+##
+## Creating Inode Structure
+##
+#####################################
+*/
 
 typedef struct inode        // 86 bytes allocated for this block
 {
@@ -77,13 +79,13 @@ typedef struct inode        // 86 bytes allocated for this block
 
 } INODE, *PINODE, **PPINODE;
 
-
-/////////////////////////////////////
-//
-// Creating FileTable Structure
-//
-/////////////////////////////////////
-
+/*
+#####################################
+##
+## Creating FileTable Structure
+##
+#####################################
+*/
 
 typedef struct filetable
 {
@@ -95,13 +97,13 @@ typedef struct filetable
 
 } FILETABLE, *PFILETABLE;
 
-
-/////////////////////////////////////
-//
-// Creating UFDT Structure
-//
-/////////////////////////////////////
-
+/*
+#####################################
+##
+## Creating UFDT Structure
+##
+#####################################
+*/
 
 typedef struct ufdt
 {
@@ -112,18 +114,18 @@ UFDT UFDTArr[MAXINODE];			// Create Array Of Structure i.e Array Of Pointer
 SUPERBLOCK SUPERBLOCKobj;		// global variable
 PINODE head = NULL;				// global pointer 
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//	
-//  Function Name	: 	man
-//	Input			: 	char *
-//	Output			: 	None
-//	Description 	: 	It Display The Description For Each Commands
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:   1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##	
+##  Function Name	: 	man
+##	Input			: 	char *
+##	Output			: 	None
+##	Description 	: 	It Display The Description For Each Commands
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:   1 July 2022
+##
+#########################################################################################
+*/
 
 void man(char *name)
 {
@@ -216,18 +218,18 @@ void man(char *name)
     }
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	DisplayHelp
-//	Input			: 	None
-//	Output			: 	None
-//	Description 	: 	It Display All List / Operations About This Application
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##																					
+##	Function Name	: 	DisplayHelp
+##	Input			: 	None
+##	Output			: 	None
+##	Description 	: 	It Display All List / Operations About This Application
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 void DisplayHelp()
 {
@@ -246,18 +248,18 @@ void DisplayHelp()
     printf("backup      :   To Take Backup Of All Created Files\n");
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	GetFDFromName
-//	Input			: 	char*
-//	Output			: 	Integer
-//	Description 	: 	Get File Descriptor Value
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	GetFDFromName
+##	Input			: 	char*
+##	Output			: 	Integer
+##	Description 	: 	Get File Descriptor Value
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int GetFDFromName(char *name) 
 {
@@ -284,18 +286,18 @@ int GetFDFromName(char *name)
     	}
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	Get_Inode
-//	Input			: 	char*
-//	Output			: 	PINODE
-//	Description 	: 	Return Inode Value Of File
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	Get_Inode
+##	Input			: 	char*
+##	Output			: 	PINODE
+##	Description 	: 	Return Inode Value Of File
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 PINODE Get_Inode(char * name) 
 {
@@ -318,18 +320,18 @@ PINODE Get_Inode(char * name)
 	return temp;
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	CreateDILB
-//	Input			: 	None
-//	Output			: 	None
-//	Description 	: 	It Creates The DILB When Program Starts 
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	CreateDILB
+##	Input			: 	None
+##	Output			: 	None
+##	Description 	: 	It Creates The DILB When Program Starts 
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 void CreateDILB() 
 {
@@ -362,18 +364,18 @@ void CreateDILB()
 	printf("DILB created successfully\n"); 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	InitialiseSuperBlock
-//	Input			: 	None
-//	Output			: 	None
-//	Description 	: 	Initialize Inode Values 
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	InitialiseSuperBlock
+##	Input			: 	None
+##	Output			: 	None
+##	Description 	: 	Initialize Inode Values 
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 void InitialiseSuperBlock() 
 {
@@ -388,18 +390,18 @@ void InitialiseSuperBlock()
 	SUPERBLOCKobj.FreeInode = MAXINODE; 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	CreateFile
-//	Input			: 	char*, Integer
-//	Output			: 	None
-//	Description 	: 	Create New Files
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	CreateFile
+##	Input			: 	char*, Integer
+##	Output			: 	None
+##	Description 	: 	Create New Files
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int CreateFile(char *name,int permission) 
 {
@@ -469,18 +471,18 @@ int CreateFile(char *name,int permission)
 	return i; 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	rm_File
-//	Input			: 	char*
-//	Output			: 	Integer
-//	Description 	: 	Remove Created Files
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	rm_File
+##	Input			: 	char*
+##	Output			: 	Integer
+##	Description 	: 	Remove Created Files
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int rm_File(char * name) 
 {
@@ -511,18 +513,18 @@ int rm_File(char * name)
 	printf("File Successfully Deleted\n");
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	ReadFile
-//	Input			: 	Integer, char*, Integer
-//	Output			: 	Integer
-//	Description 	: 	Read Data From File
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	ReadFile
+##	Input			: 	Integer, char*, Integer
+##	Output			: 	Integer
+##	Description 	: 	Read Data From File
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int ReadFile(int fd, char *arr, int isize) 
 {
@@ -575,18 +577,18 @@ int ReadFile(int fd, char *arr, int isize)
 	return isize; 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	WriteFile
-//	Input			: 	Integer, char*, Integer
-//	Output			: 	Integer
-//	Description 	: 	Write Data Into The File
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	WriteFile
+##	Input			: 	Integer, char*, Integer
+##	Output			: 	Integer
+##	Description 	: 	Write Data Into The File
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int WriteFile(int fd, char *arr, int isize) 
 {
@@ -624,18 +626,18 @@ int WriteFile(int fd, char *arr, int isize)
 	return isize; 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	OpenFile
-//	Input			: 	char*, Integer
-//	Output			: 	Integer
-//	Description 	: 	Open An Existing File
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	OpenFile
+##	Input			: 	char*, Integer
+##	Output			: 	Integer
+##	Description 	: 	Open An Existing File
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int OpenFile(char *name, int mode) 
 {
@@ -701,18 +703,18 @@ int OpenFile(char *name, int mode)
     	printf("File Opened Successfully\n");
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	CloseFileByName
-//	Input			: 	Integer
-//	Output			: 	None
-//	Description 	: 	Close Existing File By By Its File Descriptor
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	CloseFileByName
+##	Input			: 	Integer
+##	Output			: 	None
+##	Description 	: 	Close Existing File By By Its File Descriptor
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 void CloseFileByName(int fd)
 {
@@ -722,18 +724,18 @@ void CloseFileByName(int fd)
 	printf("File Closed Succesfully\n");
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	CloseFileByName
-//	Input			: 	Char
-//	Output			: 	Integer
-//	Description 	: 	Close Existing File By Its Name
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	CloseFileByName
+##	Input			: 	Char
+##	Output			: 	Integer
+##	Description 	: 	Close Existing File By Its Name
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int CloseFileByName(char *name) 
 {
@@ -757,18 +759,18 @@ int CloseFileByName(char *name)
 	return 0; 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	CloseAllFile
-//	Input			: 	None
-//	Output			: 	None
-//	Description 	: 	Close All Existing Files
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	CloseAllFile
+##	Input			: 	None
+##	Output			: 	None
+##	Description 	: 	Close All Existing Files
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 void CloseAllFile() 
 {
@@ -786,18 +788,18 @@ void CloseAllFile()
     	printf("All Files Are Closed Successfully\n");
 } 
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	LseekFile
-//	Input			: 	Integer, Integer, Integer
-//	Output			: 	Integer
-//	Description 	: 	Write Data Into The File From Perticular Position
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	LseekFile
+##	Input			: 	Integer, Integer, Integer
+##	Output			: 	Integer
+##	Description 	: 	Write Data Into The File From Perticular Position
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int LseekFile(int fd, int size, int from) 
 {
@@ -922,18 +924,18 @@ int LseekFile(int fd, int size, int from)
     	printf("Successfully Changed\n");
 } 
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	ls_file
-//	Input			: 	None
-//	Output			: 	None
-//	Description 	: 	List Out All Existing Files Name
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	ls_file
+##	Input			: 	None
+##	Output			: 	None
+##	Description 	: 	List Out All Existing Files Name
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 void ls_file() 
 {
@@ -961,18 +963,18 @@ void ls_file()
 	printf("-------------------------------------------------\n"); 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	ls_file
-//	Input			: 	Integer
-//	Output			: 	Integer
-//	Description 	: 	Display Statistical Information Of The File By Using File Descriptor
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	ls_file
+##	Input			: 	Integer
+##	Output			: 	Integer
+##	Description 	: 	Display Statistical Information Of The File By Using File Descriptor
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int fstat_file(int fd)
 {
@@ -1020,18 +1022,18 @@ int fstat_file(int fd)
 	return 0; 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	stat_file
-//	Input			: 	Char*
-//	Output			: 	Integer
-//	Description 	: 	Display Statistical Information Of The File By Using File Name
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	stat_file
+##	Input			: 	Char*
+##	Output			: 	Integer
+##	Description 	: 	Display Statistical Information Of The File By Using File Name
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int stat_file(char *name) 
 {
@@ -1087,18 +1089,18 @@ int stat_file(char *name)
 	return 0; 
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	truncate_File
-//	Input			: 	Char*
-//	Output			: 	Integer
-//	Description 	: 	Delete All Data From The File
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	truncate_File
+##	Input			: 	Char*
+##	Output			: 	Integer
+##	Description 	: 	Delete All Data From The File
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int truncate_File(char *name)
 {
@@ -1116,18 +1118,18 @@ int truncate_File(char *name)
 	printf("Data Succesfully Removed\n");
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	Backup
-//	Input			: 	None
-//	Output			: 	None
-//	Description 	: 	Take Backup Of All Created Files Into Hard-Disk
-//	Author			: 	Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	Backup
+##	Input			: 	None
+##	Output			: 	None
+##	Description 	: 	Take Backup Of All Created Files Into Hard-Disk
+##	Author			: 	Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 void backup()
 {
@@ -1147,18 +1149,18 @@ void backup()
     printf("Successfully Get The Backup Of All Created Files...\n");
 }
 
-
-////////////////////////////////////////////////////////////////////////////////////////
-//
-//	Function Name	: 	main
-//	Input			: 	None
-//	Output			: 	Integer
-//	Description 	: 	Entry Point Function
-//	Author			:   Vaibhav Gaikwad
-//	Date			:	1 July 2022
-//
-////////////////////////////////////////////////////////////////////////////////////////
-
+/*
+#########################################################################################
+##
+##	Function Name	: 	main
+##	Input			: 	None
+##	Output			: 	Integer
+##	Description 	: 	Entry Point Function
+##	Author			:   Vaibhav Gaikwad
+##	Date			:	1 July 2022
+##
+#########################################################################################
+*/
 
 int main() 
 {
