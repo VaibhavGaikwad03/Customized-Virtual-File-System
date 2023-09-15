@@ -6,6 +6,7 @@
 #include <sys/stat.h>
 #define READ 1
 #define WRITE 2
+#define APPEND 4
 #define REGULAR 1
 #define MAX_INODES 50
 #define FILE_SIZE 1024
@@ -498,15 +499,15 @@ int write_file(char *file_name, char *file_data, int no_of_bytes)
         return -2; // file is not opened
 
     file_desc = get_file_desc(file_name);
-    inode_ptr = ufdt_array[file_desc].ptr_filetable->ptr_inode; // for efficiency
+    filetable_ptr = ufdt_array[file_desc].ptr_filetable; // for efficiency
+    inode_ptr = filetable_ptr->ptr_inode;                // for efficiency
 
-    if ((inode_ptr->permission != WRITE) && (inode_ptr->permission != READ + WRITE))
+    if ((filetable_ptr->mode != WRITE) && (filetable_ptr->mode != READ + WRITE && (filetable_ptr->mode != WRITE + APPEND) && (filetable_ptr->mode != READ + WRITE + APPEND)))
         return -3; // don't have permission to write
 
     if (inode_ptr->file_type != REGULAR)
         return -4; // file is not a regular file
 
-    filetable_ptr = ufdt_array[file_desc].ptr_filetable; // for efficiency
     if ((filetable_ptr->write_offset + no_of_bytes) > FILE_SIZE)
         return -5; // there is no space
 
@@ -565,6 +566,7 @@ struct inode *get_existing_inode(char *file_name)
 int open_file(char *file_name, int mode)
 {
     int counter;
+    struct inode *inode_ptr = NULL;
     struct filetable *filetable_ptr = NULL;
 
     if (!is_file_exists(file_name))
@@ -582,14 +584,38 @@ int open_file(char *file_name, int mode)
     if (filetable_ptr == NULL)
         return -2; // memory allocation failed
 
-    filetable_ptr->mode = mode;
+    if (mode < 1 || mode > 7)
+        return -3; // invalid opening mode
+
+    inode_ptr = get_existing_inode(file_name);
+
+    if (((inode_ptr->permission == READ) && (mode == WRITE || mode == (READ + WRITE) || mode == (WRITE + APPEND) || mode == (READ + WRITE + APPEND))) || ((inode_ptr->permission == WRITE) && (mode == READ || mode == (READ + WRITE) || mode == (READ + APPEND) || (READ + WRITE + APPEND))))
+        // checking if the permissions are
+        return -4; // don't have permissions to open
+
     filetable_ptr->read_offset = 0;
-    filetable_ptr->write_offset = 0;
+    filetable_ptr->mode = mode;
     filetable_ptr->reference_count = 1;
-    filetable_ptr->ptr_inode = get_existing_inode(file_name);
+    filetable_ptr->ptr_inode = inode_ptr;
     (filetable_ptr->ptr_inode->reference_count)++;
 
+    if (mode == READ + APPEND || mode == APPEND || mode == WRITE + APPEND || mode == READ + WRITE + APPEND)
+        filetable_ptr->write_offset = filetable_ptr->ptr_inode->file_actual_size;
+    else
+        filetable_ptr->write_offset = 0;
+
     return counter;
+}
+
+int read_file(char *file_name, int byte_to_read)
+{
+    if (!is_file_exists(file_name))
+        return -1;  // there is no such file
+    
+    if (!is_open(file_name))
+        return -2;      // file is not opened
+
+    
 }
 
 int main(void)
@@ -731,10 +757,19 @@ int main(void)
                     printf("ERROR: There is no such file.\n");
                 else if (file_desc == -2)
                     printf("ERROR: Something went wrong.\n");
+                else if (file_desc == -3)
+                    printf("ERROR: Invalid opening mode.\n");
+                else if (file_desc == -4)
+                    printf("ERROR: There is no permission for this opening mode.\n");
                 else
                     printf("'%s' opened with file descriptor %d\n", command[1], file_desc);
             }
+            else if (!strcmp(command[0], "read"))
+            {
+                status = read_file(command[1], atoi(command[2]));
 
+
+            }
             else
                 printf("ERROR: Command '%s' not found.\n", command[0]);
         }
