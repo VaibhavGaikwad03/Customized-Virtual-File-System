@@ -704,7 +704,7 @@ int lseek(char *file_name, int offset, int whence)
             return offset;
         }
         else
-            return -3;  // invalid argument
+            return -3; // invalid argument
     }
 }
 
@@ -883,7 +883,7 @@ int main(void)
                     printf("ERROR: File is not opened.\n");
                 else if (status == -3)
                     printf("ERROR: Invalid arguments.\n");
-                else    
+                else
                     printf("Success\n");
             }
         }
