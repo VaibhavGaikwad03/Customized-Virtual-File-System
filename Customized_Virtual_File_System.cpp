@@ -503,6 +503,7 @@ int write_file(int file_desc, char *file_data, int no_of_bytes)
 
 int write_file(char *file_name, char *file_data, int no_of_bytes)
 {
+    int result;
     int file_desc;
     struct inode *inode_ptr = NULL;
     struct filetable *filetable_ptr = NULL;
@@ -527,8 +528,13 @@ int write_file(char *file_name, char *file_data, int no_of_bytes)
         return -5; // there is no space
 
     strcpy((inode_ptr->file_data) + (filetable_ptr->write_offset), file_data); // write data into file
-    inode_ptr->file_actual_size += no_of_bytes;                                // adjusting file actual size
-    filetable_ptr->write_offset += no_of_bytes;                                // adjusting write offset from file table
+
+    filetable_ptr->write_offset += no_of_bytes;
+    if (filetable_ptr->write_offset > inode_ptr->file_actual_size) // adjusting write offset from file table
+    {
+        result = filetable_ptr->write_offset - inode_ptr->file_actual_size;
+        inode_ptr->file_actual_size += result; // adjusting file actual size
+    }
 
     return no_of_bytes;
 }
@@ -667,7 +673,9 @@ int read_file(char *file_name, int byte_to_read)
 
 int lseek(char *file_name, int offset, int whence)
 {
+    int result;
     int file_desc;
+    struct inode *inode_ptr = NULL;
     struct filetable *filetable_ptr = NULL;
 
     if (!is_file_exists(file_name))
@@ -682,29 +690,43 @@ int lseek(char *file_name, int offset, int whence)
     file_desc = get_file_desc(file_name);
 
     filetable_ptr = ufdt_array[file_desc].ptr_filetable;
+    inode_ptr = filetable_ptr->ptr_inode;
 
-    if (whence == SEEK_SET)
+    if (whence == SEEK_SET) // from 0
     {
-        if (offset > 0)
+        if (offset >= 0)
         {
-            filetable_ptr->read_offset = filetable_ptr->write_offset = 0;
-            filetable_ptr->read_offset = filetable_ptr->write_offset = offset;
-            return offset;
+            result = inode_ptr->file_actual_size - offset;
+
+            if (result < 0) // if offset is greater than file size
+            {
+                memset((inode_ptr->file_data + inode_ptr->file_actual_size), ' ', (-result)); // jar file size peksha jast asel offset tr je extra bytes ahet tevdhe white space characters taka mhnje calculations gandnar nahit
+                inode_ptr->file_actual_size += (-result);                                     // adjust file actual size
+            }
+            filetable_ptr->read_offset = filetable_ptr->write_offset = offset; // set read & write offset
+            return filetable_ptr->read_offset;
         }
         else
             return -3; // invalid argument
     }
-    else if (whence == SEEK_END)
+    else if (whence == SEEK_END) // from end of file
     {
-        offset = filetable_ptr->ptr_inode->file_actual_size + offset;
-
-        if (offset > 0)
+        if (inode_ptr->file_actual_size < inode_ptr->file_actual_size + offset) // if offset is greater than file actual size
         {
-            filetable_ptr->read_offset = filetable_ptr->write_offset = offset;
-            return offset;
+            memset((inode_ptr->file_data + inode_ptr->file_actual_size), ' ', offset);
+            inode_ptr->file_actual_size += offset;                                                  // increase file actual size
+            filetable_ptr->read_offset = filetable_ptr->write_offset = inode_ptr->file_actual_size; // adjust read and write offset if offset is greater than file actual size
         }
         else
-            return -3; // invalid argument
+        {
+            if (inode_ptr->file_actual_size + offset < 0)
+                return -3;                                                                                   //    invalid argument
+            filetable_ptr->read_offset = filetable_ptr->write_offset = inode_ptr->file_actual_size + offset; // adjust read and write offset if offset is less than file actual size
+        }
+        return filetable_ptr->read_offset;
+    }
+    else // for current scenario
+    {
     }
 }
 
@@ -720,7 +742,7 @@ int main(void)
     clear_screen();
     create_dilb();
     initialize_superblock();
-    sleep(1);
+    // sleep(1);
     clear_screen();
 
     while (1)
@@ -886,6 +908,8 @@ int main(void)
                 else
                     printf("Success\n");
             }
+            else
+                printf("ERROR: Command '%s' not found.\n", command[0]);
         }
         else
             printf("ERROR: Invalid command.\n");
