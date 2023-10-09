@@ -337,7 +337,7 @@ void manual(char *command)
     else if (!strcmp(command, "fstat"))
         printf("\nCommand: fstat\nDescription: Used to display information of file by file descriptor.\nUsage: fstat <file_name>\n\n");
     else if (!strcmp(command, "truncate"))
-        printf("\nCommand: truncate\nDescription: Used to remove data from file.\nUsage: truncate <file_name>\n\n");
+        printf("\nCommand: truncate\nDescription: Used to remove data from file.\nUsage: truncate <file_name> <size>\n\n");
     else if (!strcmp(command, "open"))
         printf("\nCommand: open\nDescription: Used to open existing file.\nUsage: open <file_name>\n\n");
     else if (!strcmp(command, "close"))
@@ -571,9 +571,16 @@ int truncate_file(char *file_name, int size)
     {
         if (!strcmp(inode_ptr->file_name, file_name)) // searching file
         {
-            memset(inode_ptr->file_data + size, 0, inode_ptr->file_actual_size - size); // truncating data w.r.t 'size'
-            inode_ptr->file_actual_size = size;                                         // adjusting actual size of file
-
+            if (size <= inode_ptr->file_actual_size)
+            {
+                memset(inode_ptr->file_data + size, 0, inode_ptr->file_actual_size - size); // truncating data w.r.t 'size'
+                inode_ptr->file_actual_size = size;                                         // adjusting actual size of file
+            }
+            else // if size is greater than the actual size of file
+            {
+                inode_ptr->file_actual_size = size;                           // file actual size will increase because size is greater than actual size of file
+                memset(inode_ptr->file_data, 0, inode_ptr->file_actual_size); // truncating data
+            }
             if (is_open(file_name)) // if file is open
             {
                 file_desc = get_file_desc(file_name);
@@ -770,7 +777,7 @@ int main(void)
         // fflush(stdin);
         printf("\033[1;32mubuntu@linuxuser\033[0m"); // Green text
         printf(":");
-        printf("\033[1;34m~/Desktop/CVFS\033[0m"); // blue text
+        printf("\033[1;34m~/Desktop/Customized_Virtual_File_System\033[0m"); // blue text
         printf("$ ");
 
         fgets(str, 80, stdin);
