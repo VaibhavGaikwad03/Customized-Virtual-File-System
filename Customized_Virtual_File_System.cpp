@@ -10,7 +10,7 @@
 #define WRITE 2
 #define APPEND 4
 #define END_OF_FILE -4
-
+ 
 // inode
 #define REGULAR 1
 #define MAX_INODES 50
